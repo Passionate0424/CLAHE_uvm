@@ -1,0 +1,123 @@
+# =====================================
+# Verilog/SystemVerilog/UVM Project
+# =====================================
+
+# ---------------------------
+# ModelSim/QuestaSim
+# ---------------------------
+work/
+modelsim.ini
+*.vstf
+*.wlf
+wlft*
+*.log
+transcript
+vsim.wlf
+vsim_stacktrace.vstf
+*.bak
+*.cr.mti
+*.mpf
+
+# ---------------------------
+# Vivado
+# ---------------------------
+*.jou
+*.log
+*.str
+*.xpr
+*.runs/
+*.ip_user_files/
+*.sim/
+*.cache/
+*.hw/
+*.hbs/
+*.srcs/
+*.xsa
+*.bit
+*.bin
+*.ltx
+.Xil/
+*.dcp
+*.pb
+vivado*.zip
+project_*/*.gen/
+project_*/*.srcs/
+*.ip/
+
+# ---------------------------
+# Simulation Outputs
+# ---------------------------
+*.vcd
+*.fsdb
+*.shm/
+*.trn
+*.dsn
+*.log
+*_sim/
+*_behav/
+*_synth/
+DVEfiles/
+csrc/
+simv*
+*.key
+64.000000
+
+# ---------------------------
+# Coverage
+# ---------------------------
+covhtmlreport/
+*.ucdb
+cov_work/
+urgReport/
+*.vdb/
+
+# ---------------------------
+# Synthesis Reports
+# ---------------------------
+*.rpt
+*.drc
+*.timing
+*.util
+
+# ---------------------------
+# Generated Files
+# ---------------------------
+*.bmp
+*.png
+*.jpg
+!assets/*.png
+!assets/*.jpg
+
+# ---------------------------
+# IDE / Editor
+# ---------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ---------------------------
+# Temporary Files  
+# ---------------------------
+*.tmp
+*.temp
+*.orig
+*.rej
+__pycache__/
+*.pyc
+
+# ---------------------------
+# Build Artifacts
+# ---------------------------
+build/
+out/
+obj/
+
+# ---------------------------
+# User-specific
+# ---------------------------
+*.user
+*.local
