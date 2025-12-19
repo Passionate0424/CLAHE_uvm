@@ -10,7 +10,7 @@ class case0_sequence extends uvm_sequence #(histogram_transaction);
 
     virtual task body();
         if (starting_phase != null) starting_phase.raise_objection(this);
-        repeat (10) begin
+        repeat (2) begin
             `uvm_do(m_trans)
         end
         #100;

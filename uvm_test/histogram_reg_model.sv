@@ -49,6 +49,8 @@ task histogram_ram_backdoor::read(uvm_reg_item rw);
     string        path;
     bit    [15:0] r_data;
     int           status;
+    int           dut_pp_flag;
+    int           completed_set;
 
     // 1. 解析逻辑地址 (rw.offset 是 0 ~ 16383)
     // 参考 RTL 的 get_bank_id 逻辑
@@ -59,7 +61,7 @@ task histogram_ram_backdoor::read(uvm_reg_item rw);
     // 2. 计算物理位置 (参考 RTL clahe_ram_banked.v)
     // Bank ID = {OddY, OddX}
     // idx[3]是y的最低位, idx[0]是x的最低位
-    int           flat_bank_id = {(tile_idx >> 3) & 1, tile_idx & 1};
+    int           flat_bank_id = (((tile_idx >> 3) & 1) << 1) | (tile_idx & 1);
 
     // Set ID (PingPong) - 这里假设我们只读当前完成的那一帧
     // 假设外部可以通过某种方式配置 viewing_set (比如 0 或 1)
@@ -70,16 +72,23 @@ task histogram_ram_backdoor::read(uvm_reg_item rw);
     // Bank Addr = {inner_ty, inner_tx, bin_addr}
     int           tx = tile_idx & 7;
     int           ty = (tile_idx >> 3) & 7;
+
     int           bank_offset = ((ty >> 1) << (3 - 1 + 8)) | ((tx >> 1) << 8) | bin_addr;
-    // 3. 拼接层次化路径
+
+    // 3. 读取 DUT 的实际 Ping-Pong 状态，选择正确的 Set
+    void'(uvm_hdl_read("top_tb.my_dut.ping_pong_flag", dut_pp_flag));
+
+    // Scoreboard 读取时，Driver 已翻转 PP
+    // 所以刚完成写入的 Set = 1 - dut_pp_flag
+    completed_set = 1 - dut_pp_flag;
+
     path = $sformatf(
         "top_tb.my_dut.ram_banked_inst.gen_set[%0d].gen_bank[%0d].u_ram.ram[%0d]",
-        set_id,
+        completed_set,
         flat_bank_id,
         bank_offset
     );
-    // 4. 调用 DPI 读取
-    // 注意：uvm_hdl_read 返回 1 成功, 0 失败
+
     if (uvm_hdl_read(path, r_data)) begin
         rw.value[0] = r_data;
         rw.status   = UVM_IS_OK;
@@ -87,6 +96,8 @@ task histogram_ram_backdoor::read(uvm_reg_item rw);
         `uvm_error("BACKDOOR", $sformatf("Cannot read HDL path: %s", path))
         rw.status = UVM_NOT_OK;
     end
+
 endtask
+
 
 `endif

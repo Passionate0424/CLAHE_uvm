@@ -4,16 +4,21 @@
 
 class histogram_transaction extends uvm_sequence_item;
 
-    rand bit [7:0] in_y         [];
+    bit      [7:0] in_y         [];
     rand int       width;
     rand int       height;
     int            exp_histogram[64][256];
 
-    constraint frame_size_cons {in_y.size() == width * height;}
+    // constraint frame_size_cons {in_y.size() == width * height;} // Removed: Manual allocation
     constraint res_cons {
-        width == 80;
-        height == 64;
+        width == 1280;
+        height == 720;
     }
+
+    function void post_randomize();
+        in_y = new[width * height];
+        foreach (in_y[i]) in_y[i] = $urandom();
+    endfunction
 
 
     `uvm_object_utils_begin(histogram_transaction)
