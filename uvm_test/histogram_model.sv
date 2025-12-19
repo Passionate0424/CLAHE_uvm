@@ -1,15 +1,16 @@
+//histogram
 `ifndef HISTOGRAM_MODEL__SV
 `define HISTOGRAM_MODEL__SV
 
 class histogram_model extends uvm_component;
 
-    uvm_blocking_get_port #(my_transaction) port;
-    uvm_analysis_port #(model_transaction)  ap;
+    uvm_blocking_get_port #(histogram_transaction) port;
+    uvm_analysis_port #(model_transaction)         ap;
 
     extern function new(string name, uvm_component parent);
     extern function void build_phase(uvm_phase phase);
     extern virtual task main_phase(uvm_phase phase);
-    extern function void calculate_histogram(my_transaction tr, model_transaction mdl_tr);
+    extern function void calculate_histogram(histogram_transaction tr, model_transaction mdl_tr);
 
     `uvm_component_utils(histogram_model)
 endclass
@@ -25,8 +26,8 @@ function void histogram_model::build_phase(uvm_phase phase);
 endfunction
 
 task histogram_model::main_phase(uvm_phase phase);
-    my_transaction    tr;
-    model_transaction mdl_tr;
+    histogram_transaction tr;
+    model_transaction     mdl_tr;
     super.main_phase(phase);
     while (1) begin
         port.get(tr);
@@ -40,7 +41,8 @@ task histogram_model::main_phase(uvm_phase phase);
     end
 endtask
 
-function void histogram_model::calculate_histogram(my_transaction tr, model_transaction mdl_tr);
+function void histogram_model::calculate_histogram(histogram_transaction tr,
+                                                   model_transaction mdl_tr);
     int tile_w, tile_h;
 
     // 假设 8x8 分块 (8行8列, 共64个Tile)
@@ -64,7 +66,7 @@ function void histogram_model::calculate_histogram(my_transaction tr, model_tran
         int t_idx = ty * 8 + tx;
 
         // 统计灰度值
-        // bit [7:0] val = tr.in_y[i]; // in_y defined as byte or bit[7:0]? my_transaction has rand bit [7:0] in_y[];
+        // bit [7:0] val = tr.in_y[i]; // in_y defined as byte or bit[7:0]? histogram_transaction has rand bit [7:0] in_y[];
         int val = tr.in_y[i];
 
         if (t_idx >= 0 && t_idx < 64) begin

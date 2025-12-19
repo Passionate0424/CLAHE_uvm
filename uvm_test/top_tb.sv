@@ -2,44 +2,40 @@
 `include "uvm_macros.svh"
 
 import uvm_pkg::*;
-`include "my_if.sv"
-`include "my_transaction.sv"
-`include "my_sequencer.sv"
-`include "my_driver.sv"
-`include "my_monitor.sv"
-`include "my_agent.sv"
-`include "my_model.sv"
-`include "my_scoreboard.sv"
-`include "my_env.sv"
+`include "he_if_i.sv"
+`include "histogram_transaction.sv"
+`include "model_transaction.sv"
+`include "histogram_reg_model.sv"
+`include "histogram_sequencer.sv"
+`include "histogram_driver.sv"
+`include "in_monitor.sv"
+`include "histogram_agent.sv"
+`include "histogram_model.sv"
+`include "histogram_scoreboard.sv"
+`include "histogram_env.sv"
 `include "base_test.sv"
-`include "my_case0.sv"
-`include "my_case1.sv"
+`include "histogram_case0.sv"
 
 module top_tb;
 
-    reg        clk;
-    reg        rst_n;
-    reg  [7:0] rxd;
-    reg        rx_dv;
-    wire [7:0] txd;
-    wire       tx_en;
+    reg clk;
+    reg rst_n;
 
-    my_if input_if (
-        clk,
-        rst_n
-    );
-    my_if output_if (
-        clk,
-        rst_n
-    );
-
-    dut my_dut (
+    // Interface Instantiation
+    he_if_i input_if (
         .clk  (clk),
-        .rst_n(rst_n),
-        .rxd  (input_if.data),
-        .rx_dv(input_if.valid),
-        .txd  (output_if.data),
-        .tx_en(output_if.valid)
+        .rst_n(rst_n)
+    );
+
+    // DUT Instantiation
+    dut my_dut (
+        .clk           (clk),
+        .rst_n         (rst_n),
+        .in_y          (input_if.in_y),
+        .in_href       (input_if.in_href),
+        .in_vsync      (input_if.in_vsync),
+        .tile_idx      (input_if.tile_idx),
+        .ping_pong_flag(input_if.ping_pong_flag)
     );
 
     initial begin
@@ -60,9 +56,9 @@ module top_tb;
     end
 
     initial begin
-        uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env.i_agt.drv", "vif", input_if);
-        uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env.i_agt.mon", "vif", input_if);
-        uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env.o_agt.mon", "vif", output_if);
+        // Set Virtual Interface for Driver and Monitor
+        uvm_config_db#(virtual he_if_i)::set(null, "uvm_test_top.env.i_agt.drv", "vif", input_if);
+        uvm_config_db#(virtual he_if_i)::set(null, "uvm_test_top.env.i_agt.mon", "vif", input_if);
     end
 
 endmodule

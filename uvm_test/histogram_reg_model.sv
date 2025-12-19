@@ -1,3 +1,4 @@
+//histogram
 `ifndef HISTOGRAM_REG_MODEL__SV
 `define HISTOGRAM_REG_MODEL__SV 
 
