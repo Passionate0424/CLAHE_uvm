@@ -1,7 +1,7 @@
 # CLAHE Histogram UVM 验证环境
 
 本文档介绍了用于验证 CLAHE 直方图统计模块 (`clahe_histogram_stat`) 的 UVM 验证环境。该环境旨在验证模块在全尺寸图像输入下的统计正确性及冲突处理能力。
-
+**GitHub Repository**: [Passionate0424/CLAHE_verilog](https://github.com/Passionate0424/CLAHE_verilog)
 ## 1. 验证架构
 
 本环境基于标准 UVM 1.1d 方法学构建，采用 Scoreboard + Reference Model 的自动对比机制。
