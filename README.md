@@ -6,7 +6,7 @@
 
 本环境基于标准 UVM 1.1d 方法学构建，采用 Scoreboard + Reference Model 的自动对比机制。
 
-![UVM Architecture](docs/image.png)
+![UVM Architecture](uvm_test/docs/image.png)
 
 ### 核心组件
 - **`histogram_transaction`**: 定义了宽 (`width`)、高 (`height`) 及像素数据 (`in_y[]`)。支持 1280x720 等高清分辨率。
