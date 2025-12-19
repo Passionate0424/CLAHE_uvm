@@ -2,6 +2,7 @@
 `ifndef HISTOGRAM_ENV__SV
 `define HISTOGRAM_ENV__SV
 `include "histogram_reg_model.sv"
+`include "histogram_coverage.sv"
 
 class histogram_env extends uvm_env;
 
@@ -9,6 +10,7 @@ class histogram_env extends uvm_env;
     histogram_agent                                o_agt;
     histogram_model                                mdl;
     histogram_scoreboard                           scb;
+    histogram_coverage                             cov;
 
     histogram_ram_model                            rm;
 
@@ -28,6 +30,7 @@ class histogram_env extends uvm_env;
         // o_agt.is_active = UVM_PASSIVE;
         mdl             = histogram_model::type_id::create("mdl", this);
         scb             = histogram_scoreboard::type_id::create("scb", this);
+        cov             = histogram_coverage::type_id::create("cov", this);
         agt_scb_fifo    = new("agt_scb_fifo", this);
         agt_mdl_fifo    = new("agt_mdl_fifo", this);
         mdl_scb_fifo    = new("mdl_scb_fifo", this);
@@ -60,6 +63,9 @@ function void histogram_env::connect_phase(uvm_phase phase);
     // Re-use input monitor transaction as "Act" trigger
     i_agt.ap.connect(agt_scb_fifo.analysis_export);
     scb.act_port.connect(agt_scb_fifo.blocking_get_export);
+
+    // 4. Input Agent -> Coverage
+    i_agt.ap.connect(cov.analysis_export);
 
     // o_agt is not used for histogram verification
 endfunction
